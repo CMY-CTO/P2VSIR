@@ -1,0 +1,22 @@
+{
+  "title": "Example Paper",
+  "authors": ["Alice Zhang", "Bob Chen"],
+  "abstract": "This paper introduces a pipeline for converting LaTeX documents into educational videos.",
+  "sections": [
+    {
+      "id": "sec_1",
+      "title": "Introduction",
+      "content": "Research papers are hard to consume quickly.",
+      "figures": [],
+      "equations": []
+    },
+    {
+      "id": "sec_2",
+      "title": "Method",
+      "content": "The proposed pipeline includes parsing, outlining, storyboarding, rendering and video generation.",
+      "figures": [],
+      "equations": []
+    }
+  ],
+  "references": []
+}

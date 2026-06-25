@@ -1,0 +1,21 @@
+{
+  "talk_title": "From LaTeX to Video",
+  "target_audience": "students and researchers",
+  "duration_seconds": 120,
+  "chapters": [
+    {
+      "id": "ch_1",
+      "title": "Motivation",
+      "goal": "Explain why video summaries are useful.",
+      "source_sections": ["sec_1"],
+      "estimated_time": 40
+    },
+    {
+      "id": "ch_2",
+      "title": "Pipeline",
+      "goal": "Explain the automatic conversion process.",
+      "source_sections": ["sec_2"],
+      "estimated_time": 80
+    }
+  ]
+}
