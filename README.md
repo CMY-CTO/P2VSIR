@@ -1,5 +1,8 @@
 # LaTeX2Video Pipeline Demo
 
+## API 
+`https://cmy-cto.github.io/P2VSIR/`
+
 一个用于展示 **LaTeX 论文自动转换为视频展示** 的前端项目 Demo。
 
 <img width="1880" height="2560" alt="Hi4D_images_fight23_Camera04_000011 jpg_00_pred_smpl" src="https://github.com/user-attachments/assets/22a5941d-490a-4d78-bd69-4f6d6bab1d9e" />
