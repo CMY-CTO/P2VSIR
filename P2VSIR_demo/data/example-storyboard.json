@@ -1,0 +1,37 @@
+{
+  "video_title": "From LaTeX to Video",
+  "resolution": {
+    "width": 1920,
+    "height": 1080
+  },
+  "slides": [
+    {
+      "slide_id": "slide_001",
+      "title": "Motivation",
+      "visual_type": "title_bullets",
+      "latex": "\\begin{frame}{Motivation}\\begin{itemize}\\item Papers are dense\\item Videos are easier to consume\\end{itemize}\\end{frame}",
+      "narration": "Papers are dense. Videos can make research easier to understand.",
+      "duration": 10,
+      "cursor": [
+        {
+          "time": 1.2,
+          "x": 0.4,
+          "y": 0.5,
+          "action": "point"
+        }
+      ],
+      "subtitle": [
+        {
+          "start": 0,
+          "end": 5,
+          "text": "Papers are dense."
+        },
+        {
+          "start": 5,
+          "end": 10,
+          "text": "Videos make research easier to understand."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>LaTeX to Video Pipeline Demo</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <nav class="navbar">
+      <div class="brand">
+        <div class="brand-icon">π</div>
+        <div>
+          <h1>LaTeX2Video Pipeline</h1>
+          <p>From academic paper to storyboard, slides, narration and video</p>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <a href="#pipeline" class="nav-link">Pipeline</a>
+        <a href="#workspace" class="nav-link">Workspace</a>
+        <a href="#preview" class="nav-link">Preview</a>
+        <a href="https://github.com/" target="_blank" class="github-btn">GitHub</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-content">
+        <span class="badge">Static GitHub Pages Demo</span>
+        <h2>把 LaTeX Paper 自动转换成视频展示</h2>
+        <p>
+          本页面用于展示一个从 LaTeX 论文输入，到 JSON 中间表示、Storyboard、PPT Images、
+          Cursor Animation、字幕、音频，最后生成视频的完整项目流程。
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#workspace" class="primary-btn">开始上传文件</a>
+          <a href="#pipeline" class="secondary-btn">查看流程</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="terminal">
+          <div class="terminal-header">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <pre id="terminalText">latex_input.tex
+  → paper_dict.json
+  → outline.json
+  → storyboard.json
+  → slides.tex
+  → slide_images/
+  → cursor_images/
+  → final_video.mp4</pre>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <!-- Pipeline -->
+    <section id="pipeline" class="section">
+      <div class="section-heading">
+        <span class="section-kicker">Pipeline Overview</span>
+        <h2>项目处理流程</h2>
+        <p>
+          每个节点代表一个输入、脚本、LLM 调用或输出文件。你可以在下方 Workspace 中上传对应文件。
+        </p>
+      </div>
+
+      <div class="pipeline-grid">
+        <div class="pipeline-card active">
+          <div class="step-number">1</div>
+          <h3>LaTeX Input</h3>
+          <p>上传原始论文 LaTeX 文件。</p>
+          <code>paper.tex</code>
+        </div>
+
+        <div class="pipeline-arrow">→</div>
+
+        <div class="pipeline-card">
+          <div class="step-number">2</div>
+          <h3>Format Script</h3>
+          <p>脚本解析 LaTeX，生成结构化 paper dict。</p>
+          <code>paper_dict.json</code>
+        </div>
+
+        <div class="pipeline-arrow">→</div>
+
+        <div class="pipeline-card">
+          <div class="step-number">3</div>
+          <h3>LLM Outline</h3>
+          <p>LLM 根据 paper dict 生成演讲大纲。</p>
+          <code>outline.json</code>
+        </div>
+
+        <div class="pipeline-arrow">→</div>
+
+        <div class="pipeline-card">
+          <div class="step-number">4</div>
+          <h3>LLM Storyboard</h3>
+          <p>结合 paper dict 和 outline 生成 storyboard。</p>
+          <code>storyboard.json</code>
+        </div>
+
+        <div class="pipeline-arrow">→</div>
+
+        <div class="pipeline-card">
+          <div class="step-number">5</div>
+          <h3>Slide Rendering</h3>
+          <p>Storyboard 生成 LaTeX slides，再编译成图片。</p>
+          <code>slide_001.png</code>
+        </div>
+
+        <div class="pipeline-arrow">→</div>
+
+        <div class="pipeline-card">
+          <div class="step-number">6</div>
+          <h3>Cursor + Subtitle</h3>
+          <p>根据 cursor 和 text 字幕信息生成带动画的 images。</p>
+          <code>frame_001.png</code>
+        </div>
+
+        <div class="pipeline-arrow">→</div>
+
+        <div class="pipeline-card">
+          <div class="step-number">7</div>
+          <h3>Video</h3>
+          <p>images + audio 合成最终视频。</p>
+          <code>final_video.mp4</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workspace -->
+    <section id="workspace" class="section workspace-section">
+      <div class="section-heading">
+        <span class="section-kicker">Workspace</span>
+        <h2>文件输入与脚本运行</h2>
+        <p>
+          所有 document 位置都可以点击选择文件。当前版本在浏览器中模拟各阶段输出。
+        </p>
+      </div>
+
+      <div class="workspace-layout">
+        <div class="steps-panel">
+
+          <!-- Step 1 -->
+          <article class="step-card" data-step="latex">
+            <div class="step-header">
+              <div>
+                <span class="small-label">Step 1</span>
+                <h3>上传 LaTeX 文件</h3>
+              </div>
+              <span class="status-badge pending" id="status-latex">Pending</span>
+            </div>
+
+            <label class="file-drop">
+              <input type="file" id="latexInput" accept=".tex,.txt" />
+              <span class="file-icon">📄</span>
+              <strong>点击选择 LaTeX 文件</strong>
+              <small id="latexFileName">支持 .tex / .txt</small>
+            </label>
+
+            <button class="run-btn" id="runFormatterBtn">
+              Run Formatting Script → paper_dict.json
+            </button>
+          </article>
+
+          <!-- Step 2 -->
+          <article class="step-card" data-step="paper">
+            <div class="step-header">
+              <div>
+                <span class="small-label">Step 2</span>
+                <h3>paper_dict.json</h3>
+              </div>
+              <span class="status-badge pending" id="status-paper">Pending</span>
+            </div>
+
+            <label class="file-drop">
+              <input type="file" id="paperDictInput" accept=".json" />
+              <span class="file-icon">{} </span>
+              <strong>点击选择 paper_dict.json</strong>
+              <small id="paperDictFileName">或由 Step 1 自动生成</small>
+            </label>
+
+            <button class="run-btn" id="runOutlineBtn">
+              Run LLM → outline.json
+            </button>
+          </article>
+
+          <!-- Step 3 -->
+          <article class="step-card" data-step="outline">
+            <div class="step-header">
+              <div>
+                <span class="small-label">Step 3</span>
+                <h3>outline.json</h3>
+              </div>
+              <span class="status-badge pending" id="status-outline">Pending</span>
+            </div>
+
+            <label class="file-drop">
+              <input type="file" id="outlineInput" accept=".json" />
+              <span class="file-icon">🧠</span>
+              <strong>点击选择 outline.json</strong>
+              <small id="outlineFileName">或由 LLM 自动生成</small>
+            </label>
+
+            <button class="run-btn" id="runStoryboardBtn">
+              Run LLM → storyboard.json
+            </button>
+          </article>
+
+          <!-- Step 4 -->
+          <article class="step-card" data-step="storyboard">
+            <div class="step-header">
+              <div>
+                <span class="small-label">Step 4</span>
+                <h3>storyboard.json</h3>
+              </div>
+              <span class="status-badge pending" id="status-storyboard">Pending</span>
+            </div>
+
+            <label class="file-drop">
+              <input type="file" id="storyboardInput" accept=".json" />
+              <span class="file-icon">🎬</span>
+              <strong>点击选择 storyboard.json</strong>
+              <small id="storyboardFileName">包含 slides / cursor / subtitle 信息</small>
+            </label>
+
+            <button class="run-btn" id="runSlidesBtn">
+              Generate LaTeX Slides + Images
+            </button>
+          </article>
+
+          <!-- Step 5 -->
+          <article class="step-card" data-step="slides">
+            <div class="step-header">
+              <div>
+                <span class="small-label">Step 5</span>
+                <h3>Slides / Images</h3>
+              </div>
+              <span class="status-badge pending" id="status-slides">Pending</span>
+            </div>
+
+            <label class="file-drop">
+              <input type="file" id="imagesInput" accept="image/*" multiple />
+              <span class="file-icon">🖼️</span>
+              <strong>点击选择生成的 slide images</strong>
+              <small id="imagesFileName">支持多个图片文件</small>
+            </label>
+
+            <button class="run-btn" id="runCursorBtn">
+              Render Cursor + Subtitles Images
+            </button>
+          </article>
+
+          <!-- Step 6 -->
+          <article class="step-card" data-step="audio">
+            <div class="step-header">
+              <div>
+                <span class="small-label">Step 6</span>
+                <h3>Audio Narration</h3>
+              </div>
+              <span class="status-badge pending" id="status-audio">Pending</span>
+            </div>
+
+            <label class="file-drop">
+              <input type="file" id="audioInput" accept="audio/*" />
+              <span class="file-icon">🔊</span>
+              <strong>点击选择 audio 文件</strong>
+              <small id="audioFileName">支持 .mp3 / .wav / .m4a</small>
+            </label>
+
+            <button class="run-btn" id="runVideoBtn">
+              Generate Final Video
+            </button>
+          </article>
+
+          <!-- Step 7 -->
+          <article class="step-card" data-step="video">
+            <div class="step-header">
+              <div>
+                <span class="small-label">Step 7</span>
+                <h3>Final Video</h3>
+              </div>
+              <span class="status-badge pending" id="status-video">Pending</span>
+            </div>
+
+            <label class="file-drop">
+              <input type="file" id="videoInput" accept="video/*" />
+              <span class="file-icon">🎞️</span>
+              <strong>点击选择 final_video.mp4</strong>
+              <small id="videoFileName">或者由后端生成</small>
+            </label>
+          </article>
+
+        </div>
+
+        <!-- Preview Panel -->
+        <aside class="preview-panel">
+          <div class="preview-header">
+            <div>
+              <span class="small-label">Live Preview</span>
+              <h3>当前输出预览</h3>
+            </div>
+            <button class="ghost-btn" id="clearBtn">Clear</button>
+          </div>
+
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="json">JSON</button>
+            <button class="tab-btn" data-tab="slides">Slides</button>
+            <button class="tab-btn" data-tab="video">Video</button>
+            <button class="tab-btn" data-tab="logs">Logs</button>
+          </div>
+
+          <div class="tab-content active" id="tab-json">
+            <div class="preview-toolbar">
+              <select id="jsonSelect">
+                <option value="paper">paper_dict.json</option>
+                <option value="outline">outline.json</option>
+                <option value="storyboard">storyboard.json</option>
+              </select>
+              <button class="small-btn" id="downloadJsonBtn">Download JSON</button>
+            </div>
+
+            <pre class="json-viewer" id="jsonViewer">请选择或生成 JSON 文件。</pre>
+          </div>
+
+          <div class="tab-content" id="tab-slides">
+            <div id="slidePreviewGrid" class="slide-preview-grid">
+              <div class="empty-state">
+                <span>🖼️</span>
+                <p>上传或生成 slide images 后将在这里显示。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="tab-video">
+            <div class="video-preview-box">
+              <video id="videoPreview" controls></video>
+              <p id="videoPlaceholder">上传 final video 后将在这里预览。</p>
+            </div>
+          </div>
+
+          <div class="tab-content" id="tab-logs">
+            <pre class="log-viewer" id="logViewer">[System] Pipeline initialized.</pre>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Architecture -->
+    <section id="preview" class="section">
+      <div class="section-heading">
+        <span class="section-kicker">Data Contract</span>
+        <h2>推荐 JSON 数据格式</h2>
+        <p>
+          下面是建议的中间文件格式，方便后续脚本、LLM API 和前端页面连接。
+        </p>
+      </div>
+
+      <div class="schema-grid">
+        <div class="schema-card">
+          <h3>paper_dict.json</h3>
+          <pre>{
+  "title": "Paper Title",
+  "authors": ["Author A", "Author B"],
+  "abstract": "...",
+  "sections": [
+    {
+      "id": "sec_1",
+      "title": "Introduction",
+      "content": "...",
+      "figures": [],
+      "equations": []
+    }
+  ],
+  "references": []
+}</pre>
+        </div>
+
+        <div class="schema-card">
+          <h3>outline.json</h3>
+          <pre>{
+  "talk_title": "Video Title",
+  "duration": 180,
+  "chapters": [
+    {
+      "id": "ch_1",
+      "title": "Motivation",
+      "goal": "...",
+      "source_sections": ["sec_1"]
+    }
+  ]
+}</pre>
+        </div>
+
+        <div class="schema-card">
+          <h3>storyboard.json</h3>
+          <pre>{
+  "slides": [
+    {
+      "slide_id": "slide_001",
+      "title": "Motivation",
+      "visual_type": "bullet",
+      "latex": "...",
+      "narration": "...",
+      "cursor": [
+        {
+          "time": 1.2,
+          "x": 0.42,
+          "y": 0.31,
+          "action": "point"
+        }
+      ],
+      "subtitle": [
+        {
+          "start": 0,
+          "end": 3.5,
+          "text": "..."
+        }
+      ]
+    }
+  ]
+}</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      Built for GitHub Pages. Static demo only. Connect your backend or API to enable real LaTeX compile, LLM generation and video rendering.
+    </p>
+  </footer>
+
+  <script src="js/sample-data.js"></script>
+  <script src="js/pipeline.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
